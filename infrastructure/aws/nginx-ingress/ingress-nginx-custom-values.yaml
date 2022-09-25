@@ -1,0 +1,30 @@
+controller:
+  service:
+    targetPorts:
+      http: http
+      https: http
+  replicaCount: 2
+  nodeSelector:
+    kubernetes.io/os: linux
+    cloud.google.com/gke-spot: "true"
+    annotations: #https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/guide/service/annotations/
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+      # service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '3600'
+      #service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '60'
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: 'true'
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+      # service.beta.kubernetes.io/aws-load-balancer-name: beta-powerbiz-nlb
+      #service.beta.kubernetes.io/aws-load-balancer-subnets:
+      service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+      #service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: 
+
+  # ingressClassResource:
+  #   name: nginx
+  #   enabled: true
+  #   default: false
+  #   controllerValue: "k8s.io/ingress-nginx"
+
+  # ingressClassByName: true

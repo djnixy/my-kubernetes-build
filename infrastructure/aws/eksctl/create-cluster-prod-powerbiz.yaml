@@ -1,0 +1,23 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: prod-powerbiz
+  region: ap-southeast-1
+vpc:
+  id: "vpc-0f1b3c7df20fbaa39"
+  cidr: "10.50.0.0/16"
+  subnets:
+    private:
+      ap-southeast-1a:
+          id: "subnet-02e99dd4a34beccc7"
+          cidr: "10.50.128.0/18"
+      ap-southeast-1b:
+          id: "subnet-0a6bd7bf0180f2151"
+          cidr: "10.50.192.0/18"
+    public:
+      prod-sg-pub-snet-1a:
+          id: "subnet-0a91ac0159326d10e"
+          cidr: "10.50.0.0/18"
+      prod-sg-pub-snet-1b:
+          id: "subnet-0232fe4ce4425d4a4"
+          cidr: "10.50.64.0/18"

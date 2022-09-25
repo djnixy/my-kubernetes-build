@@ -1,0 +1,48 @@
+global:
+  name: consul
+  datacenter: beta-powerbiz
+  enablePodSecurityPolicies: false
+  metrics:
+    enabled: true
+    # enableAgentMetrics: true
+connectInject:
+  enabled: true
+  default: true
+  namespaceSelector: |
+    matchLabels:
+      connect-inject : enabled
+controller:
+  enabled: true
+
+spec:
+  transparentProxy:
+    DialedDirectly: false
+
+server:
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+
+  nodeSelector: |
+    application-node: "true"
+
+client:
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "100Mi"
+    limits:
+      cpu: "100m"
+      memory: "100Mi"
+ui:
+  metrics:
+    baseURL: http://prometheus-server
+
+prometheus:
+  # When true, the Helm chart will install a demo Prometheus server instance
+  # alongside Consul.
+  enabled: true

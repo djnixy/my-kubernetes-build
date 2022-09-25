@@ -1,0 +1,45 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: monitoring
+  name: prometheus-beta-ingress
+  annotations:
+    alb.ingress.kubernetes.io/group.name: beta
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: 'ip'
+    alb.ingress.kubernetes.io/load-balancer-name: prod-monitoring-alb
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-southeast-1:165232864651:certificate/53ef25d9-0718-4522-ad68-ab0ff45cdb74,
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-2017-01
+    alb.ingress.kubernetes.io/tags: env=dev
+    nginx.ingress.kubernetes.io/auth-type: basic
+  # \\(This indicates the type of Authentication.)
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+  # \\(Name of the secret that contains the user/password definitions.)
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - '
+  # \\(Message to display with an appropriate context of why the authentication is required.)
+    # alb.ingress.kubernetes.io/healthcheck-path: /info/version
+    # alb.ingress.kubernetes.io/success-codes: "200"
+    # alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    # alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    # nginx.ingress.kubernetes.io/enable-cors: "true"
+    # nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST, DELETE, PATCH, OPTIONS"
+    # nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
+    # nginx.ingress.kubernetes.io/x-forwarded-prefix: "true"
+spec:
+  rules:
+    - host: beta-powerbiz-prometheus.powerbiz.asia
+      http:
+        paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+           service:
+              name: prometheus-kube-prometheus-prometheus
+              port: 
+                number: 9090
+ 

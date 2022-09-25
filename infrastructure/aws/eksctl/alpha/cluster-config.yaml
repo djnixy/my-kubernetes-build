@@ -1,0 +1,100 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: alpha
+  region: ap-southeast-1
+  version: "1.21"
+
+iam:
+  withOIDC: true
+  serviceAccounts:
+  - metadata:
+      name: aws-load-balancer-controller
+      namespace: kube-system
+    wellKnownPolicies:
+      awsLoadBalancerController: true
+
+addons:
+- name: vpc-cni
+
+karpenter:
+  version: '0.6.3'
+  createServiceAccount: true # default is false  
+  defaultInstanceProfile: 'KarpenterNodeInstanceProfile'
+
+# nodeGroups:
+# - name: spot-t3-large-ng
+#   amiFamily: Bottlerocket
+#   instanceType: t3.large
+#   desiredCapacity: 1
+#   minSize: 0
+#   maxSize: 10
+#   # volumeSize: 80
+#   labels:
+#     application-node: "true"
+#   spot: true
+#   kubeletExtraConfig:
+#     kubeReserved:
+#         cpu: "300m"
+#         memory: "300Mi"
+#         ephemeral-storage: "1Gi"
+#     kubeReservedCgroup: "/kube-reserved"
+#     systemReserved:
+#         cpu: "300m"
+#         memory: "300Mi"
+#         ephemeral-storage: "1Gi"
+#     evictionHard:
+#         memory.available:  "200Mi"
+#         nodefs.available: "10%"
+#     featureGates:
+#         RotateKubeletServerCertificate: true # has to be enabled, otherwise it will be disabled
+
+# managedNodeGroups:
+# - name: mng1
+#   instanceType: t3.medium
+#   minSize: 0
+#   desiredCapacity: 0 
+#   amiFamily: Bottlerocket
+#   bottlerocket:
+#     enableAdminContainer: true
+#     settings:
+#       motd: "Hello, eksctl!"
+#       kubernetes:
+#         #allowed-unsafe-sysctls: ["net.core.somaxconn","net.ipv4.ip_local_port_range"]
+#         kubeReserved:
+#             cpu: "300m"
+#             memory: "300Mi"
+#             ephemeral-storage: "1Gi"
+#         kubeReservedCgroup: "/kube-reserved"
+#         systemReserved:
+#             cpu: "300m"
+#             memory: "300Mi"
+#             ephemeral-storage: "1Gi"
+#         evictionHard:
+#             memory.available:  "200Mi"
+#             nodefs.available: "10%"
+#         featureGates:
+#             RotateKubeletServerCertificate: true # has to be enabled, otherwise it will be disabled
+
+# #private ondemand
+#   - name: public-ondemand-t3-small-ng
+#     ami: Ubuntu2004
+#     instanceType: m5.xlarge
+#     desiredCapacity: 10
+#     minSize: 0
+#     maxSize: 10
+#     volumeSize: 80
+#     labels:
+#       my-cool-label: pizza
+#     spot: true
+
+# #private spot
+#   - name: ng-2-builders
+#     ami: Ubuntu2004
+#     instanceType: m5.2xlarge
+#     desiredCapacity: 2
+#     volumeSize: 100
+#     privateNetworking: true
+#     subnets:
+#       - subnet-0c5e27b6fc964ee15
+#       - subnet-050ae6cf92c673cfe

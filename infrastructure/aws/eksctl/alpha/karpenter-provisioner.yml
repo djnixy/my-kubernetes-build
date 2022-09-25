@@ -1,0 +1,31 @@
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner
+metadata:
+  name: default
+spec:
+  requirements:
+    - key: "node.kubernetes.io/instance-type" 
+      operator: In
+      values: ["t3.medium", "t3.large"]
+    - key: "topology.kubernetes.io/zone" 
+      operator: In
+      values: ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
+    - key: "karpenter.sh/capacity-type" # Defaults to on-demand
+      operator: In
+      values: ["spot"] # ["spot", "on-demand"]
+  
+  labels:
+    app-deployment: "true"
+
+  limits:
+    resources:
+      cpu: 1000
+  provider:
+    instanceProfile: eksctl-KarpenterNodeInstanceProfile-alpha
+    subnetSelector:
+      karpenter.sh/discovery: alpha
+    securityGroupSelector:
+      karpenter.sh/discovery: alpha
+  # ttlSecondsUntilExpired: 2592000
+  ttlSecondsAfterEmpty: 30
+   
